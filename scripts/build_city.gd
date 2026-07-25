@@ -51,7 +51,7 @@ func _build_buildings() -> void:
 	for i in range(roads.size() - 1):
 		for j in range(roads.size() - 1):
 			var cx : float = (float(roads[i]) + float(roads[i + 1])) / 2.0
-				var cz : float = (float(roads[j]) + float(roads[j + 1])) / 2.0
+			var cz : float = (float(roads[j]) + float(roads[j + 1])) / 2.0
 			positions.append(Vector3(cx - 18.0, 0.0, cz - 18.0))
 			positions.append(Vector3(cx + 18.0, 0.0, cz + 18.0))
 	# Shuffle for variety.
