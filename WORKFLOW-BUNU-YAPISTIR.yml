@@ -48,10 +48,15 @@ jobs:
 
       - name: Check for script/scene errors
         run: |
+          # Second pass: the first import generates .godot/, so this run
+          # surfaces only genuine script/scene problems.
           ./godot --headless --import --quit 2>&1 | tee import.log || true
-          if grep -qE "SCRIPT ERROR|Parse Error|Failed to load script|Failed loading resource" import.log; then
+          # Note: "progress dialog (task)" and "cannot connect to daemon at
+          # tcp:5037" (adb) are harmless headless-CI noise, so they are not
+          # matched here.
+          if grep -qE "SCRIPT ERROR|Parse Error|Failed to load script|Failed loading resource|Failed to instantiate an autoload" import.log; then
             echo "::error::Godot reported script/scene errors during import"
-            grep -E "SCRIPT ERROR|Parse Error|Failed to load script|Failed loading resource|at: " import.log
+            grep -E "SCRIPT ERROR|Parse Error|Failed to load script|Failed loading resource|Failed to instantiate an autoload" -A1 import.log
             exit 1
           fi
           echo "Project imported cleanly."

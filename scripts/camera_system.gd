@@ -32,7 +32,7 @@ func _on_cycle_camera() -> void:
 
 func _apply_projection() -> void:
 	if mode == CameraMode.TOP:
-		projection = Camera3D.PROJECTION_ORTHOGRAPHIC
+		projection = Camera3D.PROJECTION_ORTHOGONAL
 		size = TOP_ORTHO_SIZE
 	else:
 		projection = Camera3D.PROJECTION_PERSPECTIVE
