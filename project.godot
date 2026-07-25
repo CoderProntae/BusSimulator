@@ -19,7 +19,7 @@ GameState="*res://scripts/game_state.gd"
 [rendering]
 
 renderer/rendering_method="forward_plus"
-renderer/rendering_method.mobile="forward_plus"
+renderer/rendering_method.mobile="mobile"
 environment/glow/use_bicubic_upscale=false
 
 [display]
