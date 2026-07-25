@@ -1,0 +1,4 @@
+# UI assets folder (themes / fonts / icons used by the HUD).
+# The HUD itself is built at runtime by scripts/ui_manager.gd and
+# lives in scenes/HUD.tscn; this folder holds optional UI
+# resources (theme overrides, button icons, etc.).

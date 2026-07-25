@@ -1,0 +1,30 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/World.tscn" id="2_world"]
+[ext_resource type="PackedScene" path="res://scenes/Bus.tscn" id="3_bus"]
+[ext_resource type="Script" path="res://scripts/camera_system.gd" id="4_cam"]
+[ext_resource type="Script" path="res://scripts/passenger_system.gd" id="5_pass"]
+[ext_resource type="Script" path="res://scripts/fuel_system.gd" id="6_fuel"]
+[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="7_hud"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="World" parent="." instance=ExtResource("2_world")]
+
+[node name="Bus" parent="." instance=ExtResource("3_bus")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 40.0)
+
+[node name="CameraRig" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+script = ExtResource("4_cam")
+
+[node name="PassengerSystem" type="Node" parent="."]
+script = ExtResource("5_pass")
+
+[node name="FuelSystem" type="Node" parent="."]
+script = ExtResource("6_fuel")
+
+[node name="HUD" parent="." instance=ExtResource("7_hud")]

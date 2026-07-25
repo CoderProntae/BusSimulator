@@ -1,0 +1,244 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/day_night_cycle.gd" id="1_daynight"]
+[ext_resource type="Script" path="res://scripts/build_city.gd" id="2_buildcity"]
+[ext_resource type="Script" path="res://scripts/fuel_station.gd" id="3_fuelstation"]
+[ext_resource type="PackedScene" path="res://scenes/BusStop.tscn" id="4_busstop"]
+[ext_resource type="PackedScene" path="res://scenes/TrafficCar.tscn" id="5_traffic"]
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+tonemap_mode = 3
+tonemap_exposure = 1.0
+ssao_enabled = true
+ssao_intensity = 1.5
+ssao_radius = 2.0
+ssao_power = 1.2
+ssr_enabled = true
+ssr_max_steps = 64
+glow_enabled = true
+glow_intensity = 0.3
+glow_strength = 0.6
+fog_enabled = true
+fog_density = 0.001
+fog_light_color = Color(0.7, 0.75, 0.8, 1)
+fog_light_energy = 0.8
+fog_sun_scatter = 0.0
+ambient_light_source = 2
+ambient_light_color = Color(1.0, 0.9, 0.8, 1)
+ambient_light_energy = 0.4
+
+[sub_resource type="ProceduralSky" id="sky"]
+sky_top_color = Color(0.15, 0.4, 0.85, 1)
+sky_horizon_color = Color(0.7, 0.85, 1.0, 1)
+ground_horizon_color = Color(0.4, 0.4, 0.45, 1)
+ground_bottom_color = Color(0.2, 0.2, 0.2, 1)
+sun_angle_max = 1.4
+
+[sub_resource type="StandardMaterial3D" id="mat_asphalt"]
+albedo_color = Color(0.08, 0.08, 0.09, 1)
+roughness = 0.9
+metallic = 0.0
+
+[sub_resource type="StandardMaterial3D" id="mat_road"]
+albedo_color = Color(0.12, 0.12, 0.13, 1)
+roughness = 0.9
+metallic = 0.0
+
+[sub_resource type="StandardMaterial3D" id="mat_marking"]
+albedo_color = Color(0.95, 0.95, 0.9, 1)
+roughness = 0.6
+metallic = 0.0
+
+[sub_resource type="StandardMaterial3D" id="mat_fuelbase"]
+albedo_color = Color(0.3, 0.3, 0.35, 1)
+roughness = 0.7
+metallic = 0.0
+
+[sub_resource type="StandardMaterial3D" id="mat_fuelsign"]
+albedo_color = Color(0.1, 0.7, 0.2, 1)
+roughness = 0.5
+metallic = 0.1
+
+[sub_resource type="PlaneMesh" id="ground_mesh"]
+size = Vector2(500, 500)
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnv" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707106, -0.707106, 0, 0.707106, 0.707106, 0, 50, 0)
+script = ExtResource("1_daynight")
+light_color = Color(1, 1, 1, 1)
+light_energy = 1.2
+shadow_enabled = true
+shadow_filter = 2
+
+[node name="FillLight" type="DirectionalLight3D" parent="."]
+rotation = Vector3(0.4, 0.6, 0)
+light_color = Color(1.0, 0.85, 0.6, 1)
+light_energy = 0.4
+shadow_enabled = false
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("ground_mesh")
+material_override = SubResource("mat_asphalt")
+
+[node name="RoadVn80" type="CSGBox3D" parent="."]
+material = SubResource("mat_road")
+size = Vector3(12.0, 0.2, 500.0)
+position = Vector3(-80.0, 0.05, 0.0)
+
+[node name="RoadV0" type="CSGBox3D" parent="."]
+material = SubResource("mat_road")
+size = Vector3(12.0, 0.2, 500.0)
+position = Vector3(0.0, 0.05, 0.0)
+
+[node name="RoadV80" type="CSGBox3D" parent="."]
+material = SubResource("mat_road")
+size = Vector3(12.0, 0.2, 500.0)
+position = Vector3(80.0, 0.05, 0.0)
+
+[node name="RoadHn80" type="CSGBox3D" parent="."]
+material = SubResource("mat_road")
+size = Vector3(500.0, 0.2, 12.0)
+position = Vector3(0.0, 0.05, -80.0)
+
+[node name="RoadH0" type="CSGBox3D" parent="."]
+material = SubResource("mat_road")
+size = Vector3(500.0, 0.2, 12.0)
+position = Vector3(0.0, 0.05, 0.0)
+
+[node name="RoadH80" type="CSGBox3D" parent="."]
+material = SubResource("mat_road")
+size = Vector3(500.0, 0.2, 12.0)
+position = Vector3(0.0, 0.05, 80.0)
+
+[node name="MarkVn80" type="CSGBox3D" parent="."]
+material = SubResource("mat_marking")
+size = Vector3(0.4, 0.02, 500.0)
+position = Vector3(-80.0, 0.16, 0.0)
+
+[node name="MarkV0" type="CSGBox3D" parent="."]
+material = SubResource("mat_marking")
+size = Vector3(0.4, 0.02, 500.0)
+position = Vector3(0.0, 0.16, 0.0)
+
+[node name="MarkV80" type="CSGBox3D" parent="."]
+material = SubResource("mat_marking")
+size = Vector3(0.4, 0.02, 500.0)
+position = Vector3(80.0, 0.16, 0.0)
+
+[node name="MarkHn80" type="CSGBox3D" parent="."]
+material = SubResource("mat_marking")
+size = Vector3(500.0, 0.02, 0.4)
+position = Vector3(0.0, 0.16, -80.0)
+
+[node name="MarkH0" type="CSGBox3D" parent="."]
+material = SubResource("mat_marking")
+size = Vector3(500.0, 0.02, 0.4)
+position = Vector3(0.0, 0.16, 0.0)
+
+[node name="MarkH80" type="CSGBox3D" parent="."]
+material = SubResource("mat_marking")
+size = Vector3(500.0, 0.02, 0.4)
+position = Vector3(0.0, 0.16, 80.0)
+
+[node name="BusStop1" parent="." instance=ExtResource("4_busstop")]
+position = Vector3(-11.0, 0.0, 30.0)
+rotation = Vector3(0.0, 1.5708, 0.0)
+waiting = 4
+stop_name = "Central Station"
+
+[node name="BusStop2" parent="." instance=ExtResource("4_busstop")]
+position = Vector3(11.0, 0.0, -30.0)
+rotation = Vector3(0.0, -1.5708, 0.0)
+waiting = 5
+stop_name = "Harbor Stop"
+
+[node name="BusStop3" parent="." instance=ExtResource("4_busstop")]
+position = Vector3(30.0, 0.0, 11.0)
+rotation = Vector3(0.0, 3.14159, 0.0)
+waiting = 3
+stop_name = "North Square"
+
+[node name="BusStop4" parent="." instance=ExtResource("4_busstop")]
+position = Vector3(-30.0, 0.0, -11.0)
+rotation = Vector3(0.0, 0.0, 0.0)
+waiting = 6
+stop_name = "South Gate"
+
+[node name="FuelStationA" type="Node3D" parent="."]
+script = ExtResource("3_fuelstation")
+position = Vector3(40.0, 0.0, 40.0)
+
+[node name="Base" type="CSGBox3D" parent="FuelStationA"]
+material = SubResource("mat_fuelbase")
+size = Vector3(6.0, 3.0, 6.0)
+position = Vector3(0.0, 1.5, 0.0)
+
+[node name="Pole" type="CSGBox3D" parent="FuelStationA"]
+material = SubResource("mat_fuelbase")
+size = Vector3(0.3, 4.0, 0.3)
+position = Vector3(0.0, 2.0, 3.0)
+
+[node name="Sign" type="CSGBox3D" parent="FuelStationA"]
+material = SubResource("mat_fuelsign")
+size = Vector3(3.0, 1.5, 0.3)
+position = Vector3(0.0, 4.0, 3.0)
+
+[node name="FuelStationB" type="Node3D" parent="."]
+script = ExtResource("3_fuelstation")
+position = Vector3(-40.0, 0.0, -40.0)
+
+[node name="Base" type="CSGBox3D" parent="FuelStationB"]
+material = SubResource("mat_fuelbase")
+size = Vector3(6.0, 3.0, 6.0)
+position = Vector3(0.0, 1.5, 0.0)
+
+[node name="Pole" type="CSGBox3D" parent="FuelStationB"]
+material = SubResource("mat_fuelbase")
+size = Vector3(0.3, 4.0, 0.3)
+position = Vector3(0.0, 2.0, 3.0)
+
+[node name="Sign" type="CSGBox3D" parent="FuelStationB"]
+material = SubResource("mat_fuelsign")
+size = Vector3(3.0, 1.5, 0.3)
+position = Vector3(0.0, 4.0, 3.0)
+
+[node name="Traffic1" parent="." instance=ExtResource("5_traffic")]
+position = Vector3(-6.0, 0.15, 0.0)
+travel_direction = Vector3(1.0, 0.0, 0.0)
+speed = 10.0
+loop_distance = 240.0
+
+[node name="Traffic2" parent="." instance=ExtResource("5_traffic")]
+position = Vector3(6.0, 0.15, 0.0)
+travel_direction = Vector3(-1.0, 0.0, 0.0)
+speed = 9.0
+loop_distance = 240.0
+
+[node name="Traffic3" parent="." instance=ExtResource("5_traffic")]
+position = Vector3(0.0, 0.15, -6.0)
+travel_direction = Vector3(0.0, 0.0, 1.0)
+speed = 11.0
+loop_distance = 240.0
+
+[node name="Traffic4" parent="." instance=ExtResource("5_traffic")]
+position = Vector3(0.0, 0.15, 6.0)
+travel_direction = Vector3(0.0, 0.0, -1.0)
+speed = 8.0
+loop_distance = 240.0
+
+[node name="Traffic5" parent="." instance=ExtResource("5_traffic")]
+position = Vector3(-6.0, 0.15, 80.0)
+travel_direction = Vector3(1.0, 0.0, 0.0)
+speed = 10.0
+loop_distance = 240.0
+
+[node name="CityBuilder" type="Node3D" parent="."]
+script = ExtResource("2_buildcity")
