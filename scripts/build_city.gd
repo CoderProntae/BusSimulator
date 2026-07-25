@@ -28,13 +28,13 @@ func _mat(color : Color) -> StandardMaterial3D:
 # Raised sidewalks alongside the main cross roads.
 func _build_sidewalks() -> void:
 	var walk_mat : StandardMaterial3D = _mat(Color(0.75, 0.75, 0.72))
-	for sx in [-7.5, 7.5]:
+	for sx : float in [-7.5, 7.5]:
 		var w := CSGBox3D.new()
 		w.size = Vector3(3.0, 0.4, 500.0)
 		w.position = Vector3(sx, 0.2, 0.0)
 		w.material = walk_mat
 		add_child(w)
-	for sz in [-7.5, 7.5]:
+	for sz : float in [-7.5, 7.5]:
 		var w := CSGBox3D.new()
 		w.size = Vector3(500.0, 0.4, 3.0)
 		w.position = Vector3(0.0, 0.2, sz)
@@ -50,8 +50,8 @@ func _build_buildings() -> void:
 	# Block centers between consecutive road lines.
 	for i in range(roads.size() - 1):
 		for j in range(roads.size() - 1):
-			var cx := (roads[i] + roads[i + 1]) / 2.0
-			var cz := (roads[j] + roads[j + 1]) / 2.0
+			var cx : float = (float(roads[i]) + float(roads[i + 1])) / 2.0
+				var cz : float = (float(roads[j]) + float(roads[j + 1])) / 2.0
 			positions.append(Vector3(cx - 18.0, 0.0, cz - 18.0))
 			positions.append(Vector3(cx + 18.0, 0.0, cz + 18.0))
 	# Shuffle for variety.
@@ -68,5 +68,6 @@ func _build_buildings() -> void:
 		var b := CSGBox3D.new()
 		b.size = Vector3(bw, h, bd)
 		b.position = Vector3(p.x, h / 2.0, p.z)
-		b.material = _mat(BUILDING_COLORS[rng.randi_range(0, BUILDING_COLORS.size() - 1)])
+		var col : Color = BUILDING_COLORS[rng.randi_range(0, BUILDING_COLORS.size() - 1)]
+		b.material = _mat(col)
 		add_child(b)

@@ -1,5 +1,7 @@
 extends Node
-class_name GameState
+# NOTE: deliberately NO `class_name` here. This script is registered as the
+# `GameState` autoload in project.godot, and a global class with the same
+# name would collide with it ("Class GameState hides an autoload singleton").
 # ============================================================
 #  GameState — global singleton (autoload) that holds all
 #  shared gameplay data and the control-input bridge between

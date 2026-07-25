@@ -15,7 +15,7 @@ class_name Main
 func _ready() -> void:
 	# Give the systems a direct bus reference (they also fall
 	# back to the "bus" group, so this is just convenience).
-	_passengers.bus = _bus
-	_fuel.bus = _bus
+	_passengers.set("bus", _bus)
+	_fuel.set("bus", _bus)
 	# Ensure the camera can find the bus immediately.
 	_bus.add_to_group("bus")

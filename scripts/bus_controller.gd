@@ -24,6 +24,10 @@ const DOOR_TIME     := 0.6
 
 @onready var _door_panel : CSGBox3D = $Doors/DoorPanel
 @onready var _horn : AudioStreamPlayer3D = $HornSpeaker
+@onready var _wheel_fl : VehicleWheel3D = $WheelFL
+@onready var _wheel_fr : VehicleWheel3D = $WheelFR
+@onready var _wheel_rl : VehicleWheel3D = $WheelRL
+@onready var _wheel_rr : VehicleWheel3D = $WheelRR
 
 var _steer_current : float = 0.0
 var _doors_open : bool = false
@@ -68,20 +72,20 @@ func _physics_process(delta : float) -> void:
 	if brake > 0.0 and speed_kmh < 1.5:
 		engine = -REVERSE_FORCE * MAX_ENGINE_FORCE
 	# Drive force goes to the rear wheels only (RWD bus).
-	$WheelRL.engine_force = engine
-	$WheelRR.engine_force = engine
+	_wheel_rl.engine_force = engine
+	_wheel_rr.engine_force = engine
 
 	# ---- Steering (front wheels, smoothed for a heavy feel) ----
 	_steer_current = move_toward(_steer_current, steer_target * MAX_STEER_ANGLE, STEER_LERP * delta)
-	$WheelFL.steering = _steer_current
-	$WheelFR.steering = _steer_current
+	_wheel_fl.steering = _steer_current
+	_wheel_fr.steering = _steer_current
 
 	# ---- Brakes applied to all four wheels ----
 	var b : float = brake * MAX_BRAKE_FORCE
-	$WheelFL.brake = b
-	$WheelFR.brake = b
-	$WheelRL.brake = b
-	$WheelRR.brake = b
+	_wheel_fl.brake = b
+	_wheel_fr.brake = b
+	_wheel_rl.brake = b
+	_wheel_rr.brake = b
 
 # Public accessor so the passenger system knows if boarding is allowed.
 func are_doors_open() -> bool:

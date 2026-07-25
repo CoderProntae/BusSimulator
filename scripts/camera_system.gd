@@ -32,10 +32,10 @@ func _on_cycle_camera() -> void:
 
 func _apply_projection() -> void:
 	if mode == CameraMode.TOP:
-		projection = PROJECTION_ORTHOGRAPHIC
-		frustum_size = TOP_ORTHO_SIZE
+		projection = Camera3D.PROJECTION_ORTHOGRAPHIC
+		size = TOP_ORTHO_SIZE
 	else:
-		projection = PROJECTION_PERSPECTIVE
+		projection = Camera3D.PROJECTION_PERSPECTIVE
 
 func _physics_process(delta : float) -> void:
 	if _bus == null:
@@ -78,7 +78,10 @@ func _avoid_clip(from : Vector3, to : Vector3) -> Vector3:
 	if space_state == null:
 		return to
 	var query : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(from, to)
-	query.exclude = [_bus.get_rid()]
+	# Never let the bus itself block the chase camera.
+	var body := _bus as CollisionObject3D
+	if body != null:
+		query.exclude = [body.get_rid()]
 	var result : Dictionary = space_state.intersect_ray(query)
 	if not result.is_empty():
 		var dist : float = from.distance_to(to)

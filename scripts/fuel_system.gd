@@ -28,7 +28,10 @@ func _physics_process(delta : float) -> void:
 		GameState.set_fuel(GameState.fuel - km * FUEL_PER_KM * 100.0)
 	# Track the nearest fuel station in range.
 	_near_station = null
-	for st in get_tree().get_nodes_in_group("fuel_station"):
+	for node in get_tree().get_nodes_in_group("fuel_station"):
+		var st := node as Node3D
+		if st == null:
+			continue
 		if bus.global_position.distance_to(st.global_position) < REFUEL_RADIUS:
 			_near_station = st
 			break
@@ -41,7 +44,7 @@ func _on_refuel_requested() -> void:
 		GameState.toast.emit("Tank is already full")
 		return
 	var need : float = 100.0 - GameState.fuel
-	var cost : int = ceil(need * PRICE_PER_UNIT)
+	var cost : int = ceili(need * float(PRICE_PER_UNIT))
 	if GameState.spend_money(cost):
 		GameState.set_fuel(100.0)
 		GameState.toast.emit("Refueled for %d coins" % cost)

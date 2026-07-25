@@ -20,9 +20,13 @@ func _physics_process(_delta : float) -> void:
 		if bus == null:
 			return
 	# Only board/alight when the doors are actually open.
-	if bus.has_method("are_doors_open") and not bus.are_doors_open():
+	if bus.has_method("are_doors_open") and not bool(bus.call("are_doors_open")):
 		return
-	for stop in get_tree().get_nodes_in_group("bus_stop"):
+	for node in get_tree().get_nodes_in_group("bus_stop"):
+		# Typed cast so `waiting` / `update_visual()` resolve statically.
+		var stop := node as BusStop
+		if stop == null:
+			continue
 		if bus.global_position.distance_to(stop.global_position) > BOARD_RADIUS:
 			continue
 		# Deliver first: if we carry passengers and this is a stop

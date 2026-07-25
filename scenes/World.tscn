@@ -1,10 +1,20 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scripts/day_night_cycle.gd" id="1_daynight"]
 [ext_resource type="Script" path="res://scripts/build_city.gd" id="2_buildcity"]
 [ext_resource type="Script" path="res://scripts/fuel_station.gd" id="3_fuelstation"]
 [ext_resource type="PackedScene" path="res://scenes/BusStop.tscn" id="4_busstop"]
 [ext_resource type="PackedScene" path="res://scenes/TrafficCar.tscn" id="5_traffic"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+sky_top_color = Color(0.15, 0.4, 0.85, 1)
+sky_horizon_color = Color(0.7, 0.85, 1.0, 1)
+ground_horizon_color = Color(0.4, 0.4, 0.45, 1)
+ground_bottom_color = Color(0.2, 0.2, 0.2, 1)
+sun_angle_max = 30.0
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
 
 [sub_resource type="Environment" id="env"]
 background_mode = 2
@@ -28,13 +38,6 @@ fog_sun_scatter = 0.0
 ambient_light_source = 2
 ambient_light_color = Color(1.0, 0.9, 0.8, 1)
 ambient_light_energy = 0.4
-
-[sub_resource type="ProceduralSky" id="sky"]
-sky_top_color = Color(0.15, 0.4, 0.85, 1)
-sky_horizon_color = Color(0.7, 0.85, 1.0, 1)
-ground_horizon_color = Color(0.4, 0.4, 0.45, 1)
-ground_bottom_color = Color(0.2, 0.2, 0.2, 1)
-sun_angle_max = 1.4
 
 [sub_resource type="StandardMaterial3D" id="mat_asphalt"]
 albedo_color = Color(0.08, 0.08, 0.09, 1)
@@ -64,6 +67,9 @@ metallic = 0.1
 [sub_resource type="PlaneMesh" id="ground_mesh"]
 size = Vector2(500, 500)
 
+[sub_resource type="BoxShape3D" id="ground_shape"]
+size = Vector3(500, 1, 500)
+
 [node name="World" type="Node3D"]
 
 [node name="WorldEnv" type="WorldEnvironment" parent="."]
@@ -83,10 +89,15 @@ light_color = Color(1.0, 0.85, 0.6, 1)
 light_energy = 0.4
 shadow_enabled = false
 
-[node name="Ground" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="GroundMesh" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("ground_mesh")
 material_override = SubResource("mat_asphalt")
+
+[node name="GroundCollision" type="CollisionShape3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("ground_shape")
 
 [node name="RoadVn80" type="CSGBox3D" parent="."]
 material = SubResource("mat_road")
