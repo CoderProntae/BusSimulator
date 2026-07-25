@@ -21,6 +21,10 @@ GameState="*res://scripts/game_state.gd"
 renderer/rendering_method="forward_plus"
 renderer/rendering_method.mobile="mobile"
 environment/glow/use_bicubic_upscale=false
+; Required for Android exports: without this Godot refuses to export
+; (has_valid_project_configuration -> should_import_etc2_astc) because a
+; Linux CI host prefers S3TC and would otherwise ship no mobile textures.
+textures/vram_compression/import_etc2_astc=true
 
 [display]
 
